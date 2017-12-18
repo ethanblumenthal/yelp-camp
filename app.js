@@ -29,12 +29,12 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// render landing template
+// render landing page
 app.get('/', function(req, res) {
     res.render('landing');
 });
 
-// INDEX - render campgrounds template
+// INDEX - campgrounds
 app.get('/campgrounds', function(req, res) {
     Campground.find({}, function(err, allCampgrounds) {
         if (err) {
@@ -45,12 +45,12 @@ app.get('/campgrounds', function(req, res) {
     })
 });
 
-// NEW - render new campground template
+// NEW - campground
 app.get('/campgrounds/new', function(req, res) {
     res.render('campgrounds/new');
 });
 
-// CREATE - add new campground to database
+// CREATE - campground
 app.post('/campgrounds', function(req, res) {
     var name = req.body.name;
     var image = req.body.image;
@@ -65,7 +65,7 @@ app.post('/campgrounds', function(req, res) {
     });
 });
 
-// SHOW - display more info about a campground
+// SHOW - campground
 app.get('/campgrounds/:id', function(req, res) {
     Campground.findById(req.params.id).populate('comments').exec(function(err, foundCampground) {
         if (err) {
@@ -77,8 +77,8 @@ app.get('/campgrounds/:id', function(req, res) {
     });
 });
 
-// NEW - render new comment template
-app.get('/campgrounds/:id/comments/new', function(req, res) {
+// NEW - comment
+app.get('/campgrounds/:id/comments/new', isLoggedIn, function(req, res) {
     Campground.findById(req.params.id, function(err, campground) {
         if (err) {
             console.log(err);
@@ -88,8 +88,8 @@ app.get('/campgrounds/:id/comments/new', function(req, res) {
     });
 });
 
-// CREATE - and new comment to database
-app.post('/campgrounds/:id/comments', function(req, res) {
+// CREATE - comment
+app.post('/campgrounds/:id/comments', isLoggedIn, function(req, res) {
     Campground.findById(req.params.id, function(err, campground) {
         if (err) {
             console.log(err);
@@ -144,6 +144,14 @@ app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('campgrounds');
 });
+
+// login middleware
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
+};
 
 // start server
 app.listen(3000, function() {
