@@ -20,7 +20,7 @@ mongoose.Promise = global.Promise;
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
-seedDB();
+// seedDB();
 
 // Passport configuration
 app.use(require('express-session')({
