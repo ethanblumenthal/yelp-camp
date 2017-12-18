@@ -17,6 +17,18 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 seedDB();
 
+// passport configuration
+app.use(require('express-session')({
+    secret: 'yelp camp',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 // render landing template
 app.get('/', function(req, res) {
     res.render('landing');
