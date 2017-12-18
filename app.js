@@ -108,6 +108,25 @@ app.post('/campgrounds/:id/comments', function(req, res) {
     });
 });
 
+// SHOW - signup
+app.get('/signup', function(req, res) {
+    res.render('signup');
+});
+
+// CREATE - signup
+app.post('/signup', function(req, res) {
+    var newUser = new User({username: req.body.username});
+    User.register(newUser, req.body.password, function(err, user) {
+        if (err) {
+            console.log(err);
+            return res.render('signup');
+        }
+        passport.authenticate('local')(req, res, function() {
+            res.redirect('campgrounds');
+        });
+    });
+});
+
 // start server
 app.listen(3000, function() {
     console.log('Serving on port 3000');
