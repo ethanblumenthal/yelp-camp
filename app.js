@@ -40,9 +40,10 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.use(campgroundRoutes);
-app.use(commentRoutes);
-app.use(indexRoutes);
+// route declarations
+app.use('/', indexRoutes);
+app.use('/campgrounds', campgroundRoutes);
+app.use('/campgrounds/:id/comments', commentRoutes);
 
 // start server
 app.listen(3000, function() {
