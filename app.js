@@ -139,6 +139,12 @@ app.post('/login', passport.authenticate('local', {
 }), function(req, res) {
 });
 
+// logout
+app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('campgrounds');
+});
+
 // start server
 app.listen(3000, function() {
     console.log('Serving on port 3000');
