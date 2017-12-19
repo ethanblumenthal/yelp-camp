@@ -19,10 +19,11 @@ router.post('/signup', function(req, res) {
     var newUser = new User({username: req.body.username});
     User.register(newUser, req.body.password, function(err, user) {
         if (err) {
-            console.log(err);
-            return res.render('signup');
+            req.flash('error', err.message);
+            return res.redirect('signup');
         }
         passport.authenticate('local')(req, res, function() {
+            req.flash('success', 'Welcome ' + user.username + '!');
             res.redirect('campgrounds');
         });
     });
