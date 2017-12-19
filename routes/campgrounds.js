@@ -52,22 +52,10 @@ router.get('/:id', function(req, res) {
 });
 
 // EDIT - campground
-router.get('/:id/edit', function(req, res) {
-    if (req.isAuthenticated()) {
-        Campground.findById(req.params.id, function(err, foundCampground) {
-            if (err) {
-                res.redirect('campgrounds');
-            } else {
-                if (foundCampground.author.id.equals(req.user._id)) {
-                    res.render('campgrounds/edit', {campground: foundCampground});
-                } else {
-                    res.send('You do not have permission!');
-                }
-            }
-        })
-    } else {
-        res.send('You need to be logged in!');
-    }
+router.get('/:id/edit', checkCampgroundOwnership, function(req, res) {
+    Campground.findById(req.params.id, function(err, foundCampground) {
+        res.render('campgrounds/edit', {campground: foundCampground});
+    });
 });
 
 // UPDATE - campground
@@ -92,12 +80,31 @@ router.delete('/:id', function(req, res) {
     });
 });
 
-// login middleware
+// authentication middleware
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/login');
+};
+
+// authorization middleware
+function checkCampgroundOwnership(req, res, next) {
+    if (req.isAuthenticated()) {
+        Campground.findById(req.params.id, function(err, foundCampground) {
+            if (err) {
+                res.redirect('back');
+            } else {
+                if (foundCampground.author.id.equals(req.user._id)) {
+                    next();
+                } else {
+                    res.redirect('back');
+                }
+            }
+        })
+    } else {
+        res.redirect('back');
+    }
 };
 
 module.exports = router;
