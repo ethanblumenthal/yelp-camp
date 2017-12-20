@@ -4,15 +4,31 @@ var express = require('express'),
     Campground = require('../models/campground'),
     middleware = require('../middleware');
 
+// Search feature
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
 // INDEX - campgrounds
 router.get('/', function(req, res) {
-    Campground.find({}, function(err, allCampgrounds) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render('campgrounds/index', {campgrounds: allCampgrounds, page: 'campgrounds'});
-        }
-    })
+    if (req.query.search) {
+        var regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        Campground.find({name: regex}, function(err, allCampgrounds) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render('campgrounds/index', {campgrounds: allCampgrounds, page: 'campgrounds'});
+            }
+        });
+    } else {
+        Campground.find({}, function(err, allCampgrounds) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render('campgrounds/index', {campgrounds: allCampgrounds, page: 'campgrounds'});
+            }
+        });
+    }
 });
 
 // NEW - campground
