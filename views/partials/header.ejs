@@ -27,7 +27,7 @@
               <ul class="nav navbar-nav navbar-right">
                   <% if (!currentUser) { %>
                       <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>"><a href="/login">Login</a></li>
-                      <li class="<%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>"><a href="/register">Signup</a></li>
+                      <li class="<%= typeof page !== 'undefined' && page === 'signup' ? 'active' : '' %>"><a href="/signup">Signup</a></li>
                   <% } else { %>
                       <li><a href="#">Hello <%= currentUser.username %>!</a></li>
                       <li><a href="/logout">Logout</a></li>

@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 
 // SHOW - signup
 router.get('/signup', function(req, res) {
-    res.render('signup');
+    res.render('signup', {page: 'signup'});
 });
 
 // CREATE - signup
@@ -31,7 +31,7 @@ router.post('/signup', function(req, res) {
 
 // SHOW - login
 router.get('/login', function(req, res) {
-    res.render('login');
+    res.render('login', {page: 'login'});
 });
 
 // CREATE - login
